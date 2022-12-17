@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app" style="color: red;background-color: blue;">
+    hello
+    <p> hhahh  {{ name }} ijiiji {{age}} ooo</p>
+    <span>{{age}}</span>
+  </div>
+  <script src="/dist/umd/vue.js"></script>
+  <script>
+    let vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          name: "wanglei",
+          age: 27,
+          address: {
+            school: '一中'
+          }
+          // list:[1,{name: 'wanglei'}, {age: 27}]
+        }
+      }
+    })
+    console.log(vm._data)
+  </script>
+</body>
+
+</html>
