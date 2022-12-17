@@ -2,6 +2,8 @@ import {
   isObject, def
 } from '../util/index.js'
 import { arrayMethods } from './array.js'
+import Dep from './dep.js'
+
 //Object.defineproperty es5语法，所以vue 不支持ie8及以下
 class Observer {
   constructor(value) {
@@ -37,17 +39,26 @@ class Observer {
 }
 
 function defineReactive(data, key, value) {
+  let dep = new Dep()
   // 如果属性对应的值也是一个对象那么要递归，那么也要对这个对象进行数据的劫持
   observe(value)
   Object.defineProperty(data, key, {
+    configurable: true,
+    enumerable:true,
     get() {
+      console.log('取值') //每个属性都对应着自己的watcher
+      if (Dep.target) { // 如果当前有watcher
+        dep.depend() // 意味着我要将watcher存起来
+      }
       return value
     },
     set(newValue) {
+      console.log('更新数据')
       if (newValue === value) return
       // 如果设置的值也是一个对象那么要递归，那么也要对这个对象进行数据的劫持
       observe(newValue)
       value = newValue
+      dep.notify() // 通知依赖的watcher来进行一个依赖
     }
   })
 }
