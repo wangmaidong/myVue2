@@ -28,3 +28,5 @@
      ]
    }]
  }
+
+ watcher 和 dep的关系 一个 watcher对应n个dep 一个dep对应多个watcher  多个watcher应该是不同类型的watcher

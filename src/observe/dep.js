@@ -4,8 +4,13 @@ export default class Dep {
     this.id = id++
     this.subs = []
   }
+  addSub(watcher) {
+    this.subs.push(watcher)
+  }
   depend() {
-    this.subs.push(Dep.target)
+    // this.subs.push(Dep.target)
+    // 让这个watcher 记住我当前的dep 
+    Dep.target.addDep(this) // Dep.target --> 渲染watcher   this-->dep实例
   }
   notify() {
     this.subs.forEach(watcher => watcher.update())
