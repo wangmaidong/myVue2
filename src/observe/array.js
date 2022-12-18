@@ -28,6 +28,7 @@ methods.forEach(method => {
     if (inserted) { // 如果inserted有值，那么就是一个数组，那么就调用数组的观测方法
       ob.observeArray(inserted)
     }
+    ob.dep.notify()
     return result
   } 
 })

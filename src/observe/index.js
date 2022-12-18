@@ -7,6 +7,7 @@ import Dep from './dep.js'
 //Object.defineproperty es5语法，所以vue 不支持ie8及以下
 class Observer {
   constructor(value) {
+    this.dep = new Dep // 
     // 如果vue中数据的层次过多，需要递归的去解析对象中的属性，依次增加get  和 set
     // value第一次传进来的时候一定是一个对象，但是对象里的某个属性的值可能是一个数组
     // 数组的话不希望例如 [1, {name: 'wl'}],如果直接走walk会给数组的索引添加get和 set，但并不希望这样做，比如第0项
@@ -41,14 +42,21 @@ class Observer {
 function defineReactive(data, key, value) {
   let dep = new Dep()
   // 如果属性对应的值也是一个对象那么要递归，那么也要对这个对象进行数据的劫持
-  observe(value)
+  let childOb = observe(value)
   Object.defineProperty(data, key, {
     configurable: true,
     enumerable:true,
     get() {
-      console.log('取值') //每个属性都对应着自己的watcher
+      // console.log('取值') //每个属性都对应着自己的watcher
       if (Dep.target) { // 如果当前有watcher
         dep.depend() // 意味着我要将watcher存起来
+        if (childOb) {
+          childOb.dep.depend()
+          // 如果数组中还有数组
+          if (Array.isArray(value)) {
+            dependArray(value)
+          }
+        }
       }
       return value
     },
@@ -62,6 +70,15 @@ function defineReactive(data, key, value) {
     }
   })
 }
+function dependArray(value) { 
+  for (let i = 0; i < value.length; i++) {
+    let current = value[i] // j
+    current.__ob__ && current.__ob__.dep.depend()
+    if (Array.isArray(current)) {
+      dependArray(current)
+    }
+  }
+ }
 export function observe(data) {
   // 判断一下传过来的data是不是一个对象
   const isObj = isObject(data)

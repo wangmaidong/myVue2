@@ -5,7 +5,6 @@ export function lifecycleMixin(Vue) {
     // 通过虚拟节点，渲染出真实的dom
     const vm = this
     vm.$el = patch(vm.$el, vnode) // 用虚拟节点创建出真实节点 替换掉原有的$el
-    console.log('vm---->', vm)
   }
 }
 export function mountComponent(vm, el) {
